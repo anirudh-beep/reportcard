@@ -50,20 +50,42 @@ function updateTable() {
         row.insertCell(10).innerText = student.average.toFixed(2);
 
         const actionsCell = row.insertCell(11);
+        
+        const editButton = document.createElement('button');
+        editButton.innerText = 'Edit';
+        editButton.onclick = () => editData(rollNumber);
+        actionsCell.appendChild(editButton);
+        
         const publishButton = document.createElement('button');
         publishButton.innerText = 'Publish';
         publishButton.onclick = () => publishReport(rollNumber);
-
-        const removeButton = document.createElement('button');
-        removeButton.innerText = 'Remove';
-        removeButton.onclick = () => removeData(rollNumber);
-
         actionsCell.appendChild(publishButton);
-        actionsCell.appendChild(removeButton);
     }
 
     // Store data in localStorage for persistence
     localStorage.setItem('studentsData', JSON.stringify(studentsData));
+}
+
+function editData(rollNumber) {
+    const student = studentsData[rollNumber];
+    if (student) {
+        // Fill the form fields with student data for editing
+        document.getElementById('rollNumber').value = rollNumber;
+        document.getElementById('name').value = student.name;
+        document.getElementById('class').value = student.class;
+        document.getElementById('subject1').value = student.subject1;
+        document.getElementById('subject2').value = student.subject2;
+        document.getElementById('subject3').value = student.subject3;
+        document.getElementById('subject4').value = student.subject4;
+        document.getElementById('subject5').value = student.subject5;
+        document.getElementById('subject6').value = student.subject6;
+
+        // Remove the edited student from the data (optional, depends on your logic)
+        // delete studentsData[rollNumber];
+
+        // Update the table after editing
+        updateTable();
+    }
 }
 
 function publishReport(rollNumber) {
@@ -74,13 +96,8 @@ function publishReport(rollNumber) {
     }
 }
 
-function removeData(rollNumber) {
-    delete studentsData[rollNumber];
-    updateTable();
-}
-
 function logout() {
-    window.location.href = 'loginpage.html';
+    window.location.href = 'reportcard.html';
 }
 
 window.onload = function() {
@@ -89,4 +106,9 @@ window.onload = function() {
         studentsData = JSON.parse(savedData);
         updateTable();
     }
+}
+function removeAllData() {
+    // Clear the table body content
+    const tableBody = document.querySelector("#dataTable tbody");
+    tableBody.innerHTML = "";
 }
